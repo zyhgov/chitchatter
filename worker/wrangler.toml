@@ -1,44 +1,28 @@
 # worker/wrangler.toml
-# ⚠️ 此文件包含敏感凭证，请确保仓库为 Private！
-
 name = "chitchatter-signaling"
 main = "src/index.ts"
 compatibility_date = "2024-12-01"
 
-# 🔗 绑定自定义域名到 Worker
-routes = [
-  { pattern = "secret.zyhorg.cn/*", zone_name = "zyhorg.cn" }
-]
+# ❌ 不要在这里配置 routes（会导致冲突）
+# routes = [...]
 
-# 🔐 Durable Objects 配置（信令房间）
 [durable_objects]
 bindings = [
   { name = "SIGNALING_ROOM", class_name = "SignalingRoom" }
 ]
 
-# 🔄 数据库迁移配置（首次部署必需）
 [[migrations]]
 tag = "v1"
 new_classes = ["SignalingRoom"]
 
-# 🌐 环境变量（含敏感凭证 - 仅用于私有仓库）
 [vars]
-# ✅ 允许跨域访问的前端域名（逗号分隔，无空格）
-# 包含：自定义域名 + pages.dev + secret 域名
+# ✅ 必须包含前端域名 + secret 域名 + pages 地址（逗号分隔，无空格）
 ALLOWED_ORIGINS = "https://chat.zyhorg.cn,https://secret.zyhorg.cn,https://chitchatter-ejn.pages.dev"
 
-# 🔑 Cloudflare API 凭证（用于 Worker 内部调用）
+# 凭证配置（仓库私有可写，但建议用 wrangler secret put 更安全）
 CLOUDFLARE_API_TOKEN = "P-n3xo_9e30OZlE4jYGmcFC50dudxL8Zs_KsGL_-"
 CLOUDFLARE_ACCOUNT_ID = "9c928de2c73dab8e3c9303f39e20d733"
-
-# 🔄 TURN 服务器配置（NAT 穿透中继）
 TURN_KEY_ID = "6b4e10b531804db9c1058616dfc09f0b"
 TURN_KEY_API_TOKEN = "81fd9e0d636e52d30fd8323b83795ccbd14284af3fd4c319f8a2d4c846e94d39"
-
-# 📹 SFU 配置（音视频转发）
 SFU_APP_ID = "e4698dbd22cc91581989756ef904be62"
 SFU_APP_SECRET = "f9dd1776be856b8069d070cb3a0328b30f9543ab6c774359859e0d8317864001"
-
-# 🎯 生产环境特定配置（可选）
-[env.production]
-name = "chitchatter-signaling"
