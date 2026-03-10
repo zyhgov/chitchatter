@@ -1,26 +1,31 @@
+# worker/wrangler.toml
 name = "chitchatter-signaling"
 main = "src/index.ts"
 compatibility_date = "2024-12-01"
 
+# ✅ 可选：绑定自定义域名到 Worker（也可在 Dashboard 中配置）
+# 这样可以直接通过 secret.zyhorg.cn 访问 Worker
+routes = [
+  { pattern = "secret.zyhorg.cn/*", zone_name = "zyhorg.cn" }
+]
+
+# 🔐 Durable Objects 配置（信令房间）
 [durable_objects]
 bindings = [
   { name = "SIGNALING_ROOM", class_name = "SignalingRoom" }
 ]
 
+# 🔄 数据库迁移配置（首次部署必需）
 [[migrations]]
 tag = "v1"
-new_sqlite_classes = ["SignalingRoom"]
+new_classes = ["SignalingRoom"]
 
+# 🌐 环境变量（公开信息，可写在文件中）
 [vars]
-# 允许访问的前端域名（逗号分隔）
-# 除了 .pages.dev 和 localhost 自动允许外，自定义域名需要在这里添加
-# 示例: "https://chat.example.com,https://www.example.com"
-ALLOWED_ORIGINS = "https://chat.cn9.eu"
+# 允许跨域访问的前端域名（逗号分隔，不要有空格）
+# .pages.dev 和 localhost 默认允许，自定义域名必须显式添加
+ALLOWED_ORIGINS = "https://chat.zyhorg.cn,https://chitchatter-ejn.pages.dev"
 
-# Cloudflare TURN 服务配置（通过 wrangler secret 设置）:
-#   npx wrangler secret put TURN_KEY_ID
-#   npx wrangler secret put TURN_KEY_API_TOKEN
-#
-# Cloudflare SFU 服务配置（通过 wrangler secret 设置）:
-#   npx wrangler secret put SFU_APP_ID
-#   npx wrangler secret put SFU_APP_SECRET
+# 🎯 生产环境特定配置（可选）
+[env.production]
+name = "chitchatter-signaling"
