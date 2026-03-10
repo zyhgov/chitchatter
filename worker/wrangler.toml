@@ -1,10 +1,6 @@
-# worker/wrangler.toml
 name = "chitchatter-signaling"
 main = "src/index.ts"
 compatibility_date = "2024-12-01"
-
-# ❌ 不要在这里配置 routes（会导致冲突）
-# routes = [...]
 
 [durable_objects]
 bindings = [
@@ -16,13 +12,4 @@ tag = "v1"
 new_classes = ["SignalingRoom"]
 
 [vars]
-# ✅ 必须包含前端域名 + secret 域名 + pages 地址（逗号分隔，无空格）
 ALLOWED_ORIGINS = "https://chat.zyhorg.cn,https://secret.zyhorg.cn,https://chitchatter-ejn.pages.dev"
-
-# 凭证配置（仓库私有可写，但建议用 wrangler secret put 更安全）
-CLOUDFLARE_API_TOKEN = "P-n3xo_9e30OZlE4jYGmcFC50dudxL8Zs_KsGL_-"
-CLOUDFLARE_ACCOUNT_ID = "9c928de2c73dab8e3c9303f39e20d733"
-TURN_KEY_ID = "6b4e10b531804db9c1058616dfc09f0b"
-TURN_KEY_API_TOKEN = "81fd9e0d636e52d30fd8323b83795ccbd14284af3fd4c319f8a2d4c846e94d39"
-SFU_APP_ID = "e4698dbd22cc91581989756ef904be62"
-SFU_APP_SECRET = "f9dd1776be856b8069d070cb3a0328b30f9543ab6c774359859e0d8317864001"
